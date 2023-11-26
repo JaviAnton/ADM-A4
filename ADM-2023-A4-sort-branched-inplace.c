@@ -59,8 +59,7 @@ int main( int argc , char ** argv ) {
 
 	// read second command line argument:
 	// (absolute/relative) path to input data file
-	// char *input_data_file_location = strdup( argv[ 2 ] );
-	char *input_data_file_location = "data/l_quantity-int32.csv";
+	char *input_data_file_location = strdup( argv[ 2 ] );
 	// sanity check: echo argument value
 	fprintf(
 		stderr ,
