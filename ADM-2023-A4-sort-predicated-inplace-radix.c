@@ -6,41 +6,32 @@
 #include <limits.h>
 
 // TODO: YOUR "predicated" in-place sort implementation
-int Max(int* data_array, int N)
-{
-    int max_value = data_array[0];
-    for (int i = 1; i < n; i++)
+void sort_predicated_inplace(int N, int* data_array) {
+	//Get max value of the entire array
+	int max_value = data_array[0];
+    for (int i = 1; i < N; i++)
         if (data_array[i] > max_value)
             max_value = data_array[i];
-    return max_value;
-}
- 
-void Sort(int* data_array, int N, int place)
-{
-    int output[n];
-    int i, count[10] = { 0 };
- 
-    for (i = 0; i < n; i++){
-        count[(data_array[i] / place) % 10]++;
-		}
-    for (i = 1; i < 10; i++){
-        count[i] += count[i - 1];
-		}
-    for (i = n - 1; i >= 0; i--) {
-        output[count[(data_array[i] / place) % 10] - 1] = data_array[i];
-        count[(data_array[i] / place) % 10]--;
-    }
- 
-    for (i = 0; i < n; i++){
-        arr[i] = output[i];
-		}
-}
- 
-void sort_predicated_inplace(int N, int* data_array) {
-    max_value = Max(data_array, N);
 
+	//Sorting based on place counting
 	for(int place = 1; max_value/place > 0; place *= 10){
-		Sort(data_array, N, place);
+		int output[N];
+    	int i, count[10] = {0};
+ 
+    	for (i = 0; i < N; i++){
+        	count[(data_array[i] / place) % 10]++;
+		}
+    	for (i = 1; i < 10; i++){
+        	count[i] += count[i - 1];
+		}
+    	for (i = N - 1; i >= 0; i--) {
+        	output[count[(data_array[i] / place) % 10] - 1] = data_array[i];
+        	count[(data_array[i] / place) % 10]--;
+    	}
+ 
+    	for (i = 0; i < N; i++){
+        	data_array[i] = output[i];
+		}
 	}
 }
 
