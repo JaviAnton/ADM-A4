@@ -26,7 +26,7 @@ void sort_branched_inplace( int N , int *data_array ) {
 		}
 	}
 
-	return data_array;
+	
 }
 
 // main program

@@ -6,20 +6,45 @@
 #include <limits.h>
 
 // TODO: YOUR "predicated" in-place sort implementation
-void sort_predicated_inplace( int N , int *data_array ) {
-
-	// TODO:
-	// replace this with your
-	// "predicated" (branch-free) in-place sort implementation
-
-	for ( int i = 0 , j = N - 1 ; i < N / 2 ; i++ , j-- ) {
-		int v = data_array[ i ];
-		data_array[ i ] = data_array[ j ];
-		data_array[ j ] = v;
-	}
-
-	return;
+void swap(int* data_array, int i, int j, int direction) {
+    int temp;
+    if (direction == (data_array[i] > data_array[j])) {
+        temp = data_array[i];
+        data_array[i] = data_array[j];
+        data_array[j] = temp;
+    }
 }
+
+void merge(int* data_array, int low, int N, int direction) {
+    if (N <= 1) {
+        return;
+    }
+
+    int n = N / 2;
+
+    for (int i = 0; i < low+n; i++)
+        swap(data_array, i, i + n, direction);
+    merge(data_array, low, n, direction);
+    merge(data_array, low + n, n, direction);
+}
+
+void recursive_sort(int* data_array, int low, int N, int direction) {
+    if (N <= 1) {
+        return;
+    }
+
+    int n = N / 2;
+    recursive_sort(data_array, low, n, 1);
+    recursive_sort(data_array, low + n, n, 0);
+
+    merge(data_array, low, N, direction);
+}
+
+void sort_predicated_inplace(int* data_array, int N, int direction) {
+    recursive_sort(data_array, 0, N, direction);
+}
+
+
 
 // main program
 int main( int argc , char ** argv ) {
@@ -133,7 +158,8 @@ int main( int argc , char ** argv ) {
 	// sort data array in-place;
 	// measure the time it takes
 	gettimeofday( &before , NULL );
-	sort_predicated_inplace( N , data_array );
+	int direction = 1;
+	sort_predicated_inplace(data_array, N, direction);
 	gettimeofday( &after , NULL );
 
 	// check result correctness
