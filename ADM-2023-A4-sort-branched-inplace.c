@@ -12,20 +12,28 @@ void sort_branched_inplace( int N , int *data_array ) {
 	// replace this with your
 	// "branched" in-place sort implementation
 
-	for ( int i = 0 , j = N - 1 ; i < N / 2 ; i++ , j-- ) {
-		int v = data_array[ i ];
-		data_array[ i ] = data_array[ j ];
-		data_array[ j ] = v;
+	// Shell sort
+
+	int temp, i, j, interval;
+
+	for (interval = N/2; interval > 0; interval = interval/2){
+		for (i = interval; i < N; i++){
+			temp = data_array[i];
+			for (j = i; (j >= interval) && (data_array[j-interval] > temp); j = j - interval){
+				data_array[j] = data_array[j-interval];
+			}
+			data_array[j] = temp;
+		}
 	}
 
-	return;
+	return data_array;
 }
 
 // main program
 int main( int argc , char ** argv ) {
 
 	// variables for timing
-	struct timeval before , after;
+	struct timeval before, after;
 	long long int usec = 0;
 
 	// check number command line arguments
@@ -51,7 +59,8 @@ int main( int argc , char ** argv ) {
 
 	// read second command line argument:
 	// (absolute/relative) path to input data file
-	char *input_data_file_location = strdup( argv[ 2 ] );
+	// char *input_data_file_location = strdup( argv[ 2 ] );
+	char *input_data_file_location = "data/l_quantity-int32.csv";
 	// sanity check: echo argument value
 	fprintf(
 		stderr ,
