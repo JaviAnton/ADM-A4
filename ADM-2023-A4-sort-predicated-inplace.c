@@ -6,42 +6,37 @@
 #include <limits.h>
 
 // TODO: YOUR "predicated" in-place sort implementation
-void swap(int* data_array, int i, int j, int direction) {
-    int temp;
-    if (direction == (data_array[i] > data_array[j])) {
-        temp = data_array[i];
-        data_array[i] = data_array[j];
-        data_array[j] = temp;
-    }
-}
+void sort_predicated_inplace(int N, int* data_array) {
+	//Get max value of the entire array
+	int max_value = data_array[0];
+    for (int i = 1; i < N; i++)
+        if (data_array[i] > max_value)
+            max_value = data_array[i];
 
-void merge(int* data_array, int low, int N, int direction) {
-    if (N <= 1) {
-        return;
-    }
-
-    int n = N / 2;
-
-    for (int i = 0; i < low+n; i++)
-        swap(data_array, i, i + n, direction);
-    merge(data_array, low, n, direction);
-    merge(data_array, low + n, n, direction);
-}
-
-void recursive_sort(int* data_array, int low, int N, int direction) {
-    if (N <= 1) {
-        return;
-    }
-
-    int n = N / 2;
-    recursive_sort(data_array, low, n, 1);
-    recursive_sort(data_array, low + n, n, 0);
-
-    merge(data_array, low, N, direction);
-}
-
-void sort_predicated_inplace(int* data_array, int N, int direction) {
-    recursive_sort(data_array, 0, N, direction);
+	//Sorting based on place counting
+	for(int place = 1; max_value/place > 0; place *= 10)
+	{
+		int output[N];
+    	int i, count[10] = {0};
+ 
+    	for (i = 0; i < N; i++)
+		{
+        	count[(data_array[i] / place) % 10]++;
+		}
+    	for (i = 1; i < 10; i++)
+		{
+        	count[i] += count[i - 1];
+		}
+    	for (i = N - 1; i >= 0; i--) 
+		{
+        	output[count[(data_array[i] / place) % 10] - 1] = data_array[i];
+        	count[(data_array[i] / place) % 10]--;
+    	}
+ 
+    	for (i = 0; i < N; i++){
+        	data_array[i] = output[i];
+		}
+	}
 }
 
 
@@ -158,8 +153,7 @@ int main( int argc , char ** argv ) {
 	// sort data array in-place;
 	// measure the time it takes
 	gettimeofday( &before , NULL );
-	int direction = 1;
-	sort_predicated_inplace(data_array, N, direction);
+	sort_predicated_inplace(N, data_array);
 	gettimeofday( &after , NULL );
 
 	// check result correctness
